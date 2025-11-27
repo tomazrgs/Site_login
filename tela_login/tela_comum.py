@@ -1,46 +1,12 @@
-import os
-import hashlib
+from dados import pessoas
+from dados import adm
 
-pessoas = [{'login':'indeed','senha': '1234', 'adm': False},
-           {'login':'fernanda0','senha': 'africa', 'adm': False},
-           {'login': 'adm', 'senha': 'adm123', 'adm': True}]
-
-
-def criptografa_lista():
-    #/criptografa todas as senhas da lista.
-
-    for pessoa in pessoas:
-        senha = pessoa['senha']
-        cripografada = hashlib.sha256(senha.encode('utf-8'))
-        senha_criptografada = cripografada.hexdigest()
-        pessoa['senha'] = senha_criptografada
-
-def criptografa_senha(senha):
-
-    #/ Chamada quando necessario criptografar uma senha, ou ate mesmo outra coisa, criptografa e devolve qualquer entrada criptografada.
-
-    cripografada = hashlib.sha256(senha.encode('utf-8'))
-    senha_criptografada = cripografada.hexdigest()
-    return senha_criptografada
-
-def voltar_menu():
-    #/ returona ao menu ao pressionar qualquer tecla
-    input('')
-    menu()
-
-def fechar():
-
-    #/ encerra o sistema
-
-    limpar_tela()
-    return 0
-
-def limpar_tela():
-
-    #/ limpa a tela e coloca tracejados para o visual mais bonitinho
-
-    os.system('cls')
-    print('--------------------------------------------------')
+from utils import criptografa_lista
+from utils import criptografa_senha
+from utils import limpar_tela
+from utils import voltar_menu
+from utils import fechar
+from utils import listar_usuarios
 
 def entrar():
     limpar_tela()
@@ -62,7 +28,7 @@ def entrar():
 
     if login_encontrado == None:
         input('Usuario não encontrado, tente novamente')
-        menu()
+        voltar_menu()
 
     senha = input(f'Olá {usuario} informe sua senha: ')
 
@@ -73,16 +39,16 @@ def entrar():
         print('----LOGADO COM SUCESSO----')
 
         if login_encontrado['adm']:
-            print('bem vindo ao menu de adm!!')
+            print('--bem vindo ao menu de adm--')
 
     else:
         input('Usuario ou senha invalida, tente novamente.')
-        menu()
+        voltar_menu(menu)
 
-    
 def cadastrar():
 
     i = 0 #/ iniciamos a variavel i para utiliza-la em uma validação a baixo, sempre que for incrementar uma variavel é necessário inicialização, por ser int não podemos utilizar None.
+
     usuario = input('Escolha um nome de usuario: \n')
     usuario = usuario.replace(' ','') #/ Troca espaços por areas vazias para a validação a baixo.
 
@@ -101,7 +67,7 @@ def cadastrar():
             i += 1
             if i == 3:
                 input('Tentativas excedidas, por favor tente novamente do menu')
-                menu()
+                voltar_menu(menu)
 
     #/ Ao solicitar a criação da senha, tive um desafio, como impedir que o usuario coloque apenas espaço ou apenas de ENTER no input.
 
@@ -109,14 +75,14 @@ def cadastrar():
     senha = senha.replace(' ','') #/ O desafio foi resolvido fácilmente utilizando replace, um tempo depois adicionei replace a cina para validar o usuario também.
 
     while senha == '': #/ Utilizei while para que 'enquanto a senha tiver apenas enter ou espaço', ele entrara no laço e pedira uma senha até ser da forma correta.
+
         print('Senha invalida por favor tente novamente\n')
         senha = input('Crie uma senha: ')
         senha = senha.replace(' ','')
 
     #/ Criptografa a senha utilizando MD5 e formata logo em baixo para ser exibida apenas em exadecimal.
 
-    cripografada = hashlib.md5(senha.encode('utf-8'))
-    senha_criptografada = cripografada.hexdigest()
+    senha_criptografada = criptografa_senha(senha)
 
     #/ Solicitamos para que digite novamente a senha, exatamente como foi digitado a cima, para validação.
 
@@ -124,25 +90,16 @@ def cadastrar():
     repet_senha = repet_senha.replace(' ','')
 
     while repet_senha != senha: #/ caso seja diferente, peço para redigitar, pensando em adicionar limite de tentativas.
-        repet_senha = input('As senhas são diferentes, por favor digite a mesma senha: ')
+
+        repet_senha = input('As senhas são diferentes, por favor digite a mesma senha:')
         repet_senha = repet_senha.replace(' ','')
 
     #/ Adiciono o usuario novo ao dicionário e exibo uma mensagem de cadastro bem sucedido.
 
-    novo_usuario = {'login': usuario , 'senha': senha, 'adm': False}
+    novo_usuario = {'login': usuario , 'senha': senha_criptografada, 'adm': False}
     pessoas.append(novo_usuario)
-    print(f'{usuario} seu cadastro foi feito com sucesso ')
-    menu()
-
-def listar_usuarios():
-
-    #/ Pega usuario por usuario e imprime na tela.
-
-    for pessoa in pessoas:
-        print(f'Usuario: {pessoa['login']}')
-
-    input('Pressione qualque tecla para retornar ao menu \n')
-    menu()
+    print(f'{usuario} seu cadastro foi feito com sucesso!! ')
+    voltar_menu(menu)
 
 def menu():
 
@@ -153,7 +110,6 @@ def menu():
     '\n4: Sair') 
     print('--------------------------------------------------')
     opcoes()
-
 
 def opcoes(): 
 
@@ -166,7 +122,7 @@ def opcoes():
         case 2: # Chama a função cadastrar
            cadastrar()
         case 3: # Chama a função listar_usuarios
-            listar_usuarios()
+            listar_usuarios(menu)
         case 4: # Chama a função fechar
             fechar()
 
