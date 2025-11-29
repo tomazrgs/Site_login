@@ -1,9 +1,9 @@
 from dados import pessoas
 from utils import criptografa_senha
 from utils import limpar_tela
-from utils import listar_usuario
+from utils import listar_usuarios
 
-def menu_adim():
+def menu_admin():
 
     limpar_tela()
 
