@@ -10,6 +10,8 @@ from utils import listar_usuarios
 
 def entrar():
     limpar_tela()
+     
+    i = 0
 
     #/ .lower() força todas os caracteres do input a ficarem minusculos.
 
@@ -41,9 +43,12 @@ def entrar():
         if login_encontrado['adm']:
             print('--bem vindo ao menu de adm--')
 
-    else:
-        input('Usuario ou senha invalida, tente novamente.')
-        voltar_menu(menu)
+    elif  login_encontrado['senha'] !=  senha_criptografada and i < 2:
+        senha = input('Usuario ou senha invalida, tente novamente:')
+        senha_criptografada = criptografa_senha(senha)
+        i = i+i
+        
+    else: voltar_menu(menu)
 
 def cadastrar():
 
