@@ -2,6 +2,7 @@ from dados import pessoas
 from utils import criptografa_senha
 from utils import limpar_tela
 from utils import listar_usuarios
+from utils import fechar
 
 def menu_admin():
 
@@ -9,10 +10,11 @@ def menu_admin():
 
     print('--bem vindo ao menu de adm--')
     
-    print('\n1: Trocar senha de usuario ' 
-    '\n2: Cadastrar outro adm' 
-    '\n3: Lista de usuários'
-    '\n4: Sair') 
+    print('\n1: Cadastrar outro adm ' 
+    '\n2: Trocar senha de usuario' 
+    '\n3 Remover Usuario'
+    '\n4: Listar usuários'
+    '\n5: Sair') 
     print('--------------------------------------------------')
     opcoes()
 
@@ -36,21 +38,27 @@ def novo_admin():
     novo_adm = input ('Informe o usuario: ')
     novo_adm = novo_adm.replace(' ','')
 
-    login_enontrado = None
-
     for pessoa in pessoas:
         if pessoa['login'] == novo_adm and pessoa['adm'] == False:
-            login_enontrado = pessoa
 
             pessoa['adm'] = True
 
             print('Usuario promovido a ADM')
             input('Pressione ENTER para retornar ao menu:')
             menu_admin()
+
         elif pessoa['login'] == novo_adm and pessoa['adm'] == True:
             print('Usuario já é um ADM')
             input('Pressione ENTER para retornar ao menu:')
             menu_admin()
+
+def deletar_usuario():
+
+    usuario = input('Informe o usuario que deseja deletar: ')
+
+    for indice, pessoa in enumerate(pessoas):
+        if usuario == pessoa['login']:
+            del pessoa[indice]
 
 def opcoes():
     #/ lieralmente switch case do C
@@ -58,7 +66,15 @@ def opcoes():
     escolha = int(input('\nEscolha uma opção '))
     match escolha:
         case 1: # Chama a função entrar
+            novo_admin()
+        case 2:
             trocar_senha()
+        case 3:
+            deletar_usuario()
+        case 4:
+            listar_usuarios()
+        case 5:
+            fechar()
 
 if __name__ == '__main__':
     pass
