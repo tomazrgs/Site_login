@@ -63,7 +63,7 @@ def deletar_usuario():
 def opcoes():
     #/ lieralmente switch case do C
 
-    escolha = int(input('\nEscolha uma opção '))
+    escolha = int(input('\nEscolha uma opção ')) 
     match escolha:
         case 1: # Chama a função entrar
             novo_admin()
