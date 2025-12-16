@@ -1,5 +1,6 @@
 import os
 import hashlib
+import json
 
 from dados import pessoas
 
@@ -31,7 +32,6 @@ def listar_usuarios(menu):
     input('Pressione qualque tecla para retornar ao menu \n')
     menu()
 
-
 def limpar_tela():
 
     #/ limpa a tela e coloca tracejados para o visual mais bonitinho
@@ -39,13 +39,11 @@ def limpar_tela():
     os.system('cls')
     print('--------------------------------------------------')
 
-
 def voltar_menu(menu):
     print('--------------------------------------------------')
     input('Aperte ENTER para retornar ao menu.')
     print('--------------------------------------------------')
     menu()
-
 
 def fechar():
 
@@ -53,6 +51,20 @@ def fechar():
 
     limpar_tela()
     return 0
+
+def leitura_json(nome_arquivo):
+    endereco = os.path.join(os.path.dirname(__file__), nome_arquivo)
+
+    with open(endereco, 'r', encoding = 'utf-8') as arquivo:
+        dados = json.load(arquivo)
+        return dados
+    
+def copiar_json(nome_arquivo, nome_backup):
+    endereco_backup = os.path.join(os.path.dirname(__file__), nome_backup)
+
+    dados = leitura_json(nome_arquivo)
+    with open(endereco_backup, 'w', encoding = 'utf-8') as arquivo:
+        json.dump(dados, arquivo)
 
 
 if __name__ == '__main__':
