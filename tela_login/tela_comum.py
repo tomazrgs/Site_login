@@ -7,6 +7,8 @@ from utils import limpar_tela
 from utils import voltar_menu
 from utils import fechar
 from utils import listar_usuarios
+from utils import copiar_json
+from utils import leitura_json
 
 def entrar():
     limpar_tela()
@@ -51,7 +53,7 @@ def entrar():
     else: voltar_menu(menu)
 
 def cadastrar():
-
+    copiar_json('dados.json', 'backup.json')
     i = 0 #/ iniciamos a variavel i para utiliza-la em uma validação a baixo, sempre que for incrementar uma variavel é necessário inicialização, por ser int não podemos utilizar None.
 
     usuario = input('Escolha um nome de usuario: \n')
