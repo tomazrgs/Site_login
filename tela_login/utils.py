@@ -1,18 +1,29 @@
 import os
 import hashlib
 import json
+import time
 
-from dados import pessoas
 
-def criptografa_lista():
-    #/criptografa todas as senhas da lista.
+def remove_espaco(string):
+    string = string.replace(' ','')
+    return string
 
-    for pessoa in pessoas:
-        if len(pessoa['senha']) != 64: #/ verifica o tamanho da senha, caso seja maior que 64 (tamanho maximo da hash sha256) 
-            senha = pessoa['senha']
-            cripografada = hashlib.sha256(senha.encode('utf-8'))
-            senha_criptografada = cripografada.hexdigest()
-            pessoa['senha'] = senha_criptografada
+def procura_caminho(nome_arquivo):
+    caminho = os.path.join(os.path.dirname(__file__), nome_arquivo)
+    return caminho
+
+def leitura_json(nome_arquivo):
+        caminho = os.path.join(os.path.dirname(__file__), nome_arquivo)
+        with open(caminho, 'r', encoding = 'utf-8') as arquivo:
+            dados = json.load(arquivo)
+            return dados
+
+def copiar_json(nome_arquivo, nome_backup):
+        caminho = os.path.join(os.path.dirname(__file__), nome_arquivo)
+        caminho_backup = os.path.join(os.path.dirname(__file__), nome_backup)
+        dados = leitura_json(caminho)
+        with open(caminho_backup, 'w', encoding = 'utf-8') as backup:
+                json.dump(dados, backup, indent=4)
 
 def criptografa_senha(senha):
 
@@ -23,13 +34,14 @@ def criptografa_senha(senha):
     return senha_criptografada
 
 def listar_usuarios(menu):
-
     #/ Pega usuario por usuario e imprime na tela.
+    dados = leitura_json('dados.json')
 
-    for pessoa in pessoas:
-        print(f'Usuario: {pessoa['login']}')
+    for dado in dados:
+        print(f'-{dado['login']}')
 
-    input('Pressione qualque tecla para retornar ao menu \n')
+    input('Pressione enter para retornar')
+    time.sleep(1)
     menu()
 
 def limpar_tela():
@@ -51,21 +63,6 @@ def fechar():
 
     limpar_tela()
     return 0
-
-def leitura_json(nome_arquivo):
-    endereco = os.path.join(os.path.dirname(__file__), nome_arquivo)
-
-    with open(endereco, 'r', encoding = 'utf-8') as arquivo:
-        dados = json.load(arquivo)
-        return dados
-    
-def copiar_json(nome_arquivo, nome_backup):
-    endereco_backup = os.path.join(os.path.dirname(__file__), nome_backup)
-
-    dados = leitura_json(nome_arquivo)
-    with open(endereco_backup, 'w', encoding = 'utf-8') as arquivo:
-        json.dump(dados, arquivo)
-
 
 if __name__ == '__main__':
     pass
