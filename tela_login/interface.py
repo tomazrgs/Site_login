@@ -34,3 +34,6 @@ def menu_admin():
 def erro_login_cad():
     print('Usuario ou senha invalidos por favor tete novamente.')
     time.sleep(2)
+    
+if __name__ == '__main__':
+    pass
