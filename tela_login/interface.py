@@ -3,6 +3,13 @@ import time
 
 from utils import limpar_tela
 
+def erro_arquivo():
+    FileNotFoundError
+    limpar_tela()
+    print('--------------------------------------------------')
+    print('Arquivo não encontrado')
+    print('--------------------------------------------------')
+    time.sleep(2)
 
 def voltar_menu(menu):
     print('--------------------------------------------------')
