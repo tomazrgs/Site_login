@@ -3,12 +3,12 @@ import json
 
 from tela_adm import opcoes_adm
 
+
 from interface import menu
 from interface import erro_login_cad
 
 from utils import criptografa
 from utils import limpar_tela
-from utils import voltar_menu
 from utils import fechar
 from utils import listar_usuarios
 from utils import remove_espaco
@@ -61,7 +61,7 @@ def entrar():
 
             trocar_senha_validacao()
             time.sleep(1)
-            voltar_menu(opcoes)
+            opcoes()
 
 def cadastrar():
     dados = leitura_json('dados.json')
@@ -81,7 +81,7 @@ def cadastrar():
             if i == 3:
                 print('Tentativas excedidas, por favor tente novamente do menu')
                 time.sleep(2)
-                voltar_menu(menu)
+                opcoes()
 
     senha = input('Insira a senha: ')
     senha = remove_espaco(senha) 
@@ -119,8 +119,7 @@ def cadastrar():
 
     print(f'{usuario} seu cadastro foi feito com sucesso!! ')
     time.sleep(2)
-    voltar_menu(opcoes)
-
+    opcoes()
 
 def opcoes(): 
     menu()
