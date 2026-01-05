@@ -3,7 +3,7 @@ import json
 
 from tela_adm import opcoes_adm
 
-
+from interface import erro_arquivo
 from interface import menu
 from interface import erro_login_cad
 
@@ -24,8 +24,12 @@ def entrar():
 
     while x < 3:
         usuario_encontrado = False
-        dados = leitura_json('dados.json')
-
+        try:
+            dados = leitura_json('dados.json')
+        except:
+            erro_arquivo()
+            opcoes()
+            
         usuario = input('Informe seu usuario: ').lower() 
         usuario = remove_espaco(usuario)
 
@@ -51,20 +55,27 @@ def entrar():
             
     if x == 3:
         limpar_tela()
-        dados = leitura_json('dados.json')
-
+        try:
+            dados = leitura_json('dados.json')
+        except:
+            erro_arquivo()
+            opcoes()
 
         print('Limite de tentativas excedidas, tente novamente.')
         escolha = input('Caso tenha esquecido sua senha digite "SIM": ').lower()
 
         if escolha == 'sim':
-
             trocar_senha_validacao()
             time.sleep(1)
             opcoes()
 
 def cadastrar():
-    dados = leitura_json('dados.json')
+    try:
+        dados = leitura_json('dados.json')
+    except:
+        erro_arquivo()
+        opcoes()
+        
     copiar_json('dados.json', 'backup.json')
 
     i = 0  
