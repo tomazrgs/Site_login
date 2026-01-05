@@ -1,78 +1,88 @@
-from dados import pessoas
-from utils import criptografa_senha
+import time
+import json
+
+from interface import menu_admin
+
+from utils import criptografa
 from utils import limpar_tela
 from utils import listar_usuarios
 from utils import fechar
+from utils import copiar_json
+from utils import leitura_json
+from utils import procura_caminho
+from utils import remove_espaco
+from utils import procura_caminho
+from utils import speed_cast
+from utils import trocar_senha_adm
 
-def menu_admin():
-
-    limpar_tela()
-
-    print('--bem vindo ao menu de adm--')
     
-    print('\n1: Cadastrar outro adm ' 
-    '\n2: Trocar senha de usuario' 
-    '\n3 Remover Usuario'
-    '\n4: Listar usuários'
-    '\n5: Sair') 
-    print('--------------------------------------------------')
-    opcoes()
-
-def trocar_senha():
-    print('---------------------------')
-    usuario = input('Por favor digite o usuario no qual deseja trocar a senha: ')
-    
-    login_encontrado = None
-    for pessoa in pessoas:
-        if pessoa['login'] == usuario:
-            login_encontrado = pessoa
-
-            nova_senha = input('Digite a nova senha: ')
-            senha_criptografada = criptografa_senha(nova_senha)
-            
-            login_encontrado['senha'] = senha_criptografada
-
 def novo_admin():
+    encontrado = None
+    caminho = procura_caminho('dados.json')
     limpar_tela()
 
-    novo_adm = input ('Informe o usuario: ')
-    novo_adm = novo_adm.replace(' ','')
+    print('1: Usuario existente\n' \
+          '2: Usuario não existente\n')
 
-    for pessoa in pessoas:
-        if pessoa['login'] == novo_adm and pessoa['adm'] == False:
+    escolha = int(input('Escolha uma opção: '))
 
-            pessoa['adm'] = True
+    match escolha:
+        case 1:
+            dados = leitura_json('dados.json')
+            novo_adm = input ('Informe o nome do usuario: ')
+            novo_adm = remove_espaco(novo_adm)
 
-            print('Usuario promovido a ADM')
-            input('Pressione ENTER para retornar ao menu:')
-            menu_admin()
+            for dado in dados:
+                if dado['login'] == novo_adm and dado['adm'] == False:
+                    encontrado = True
+                    dado['adm'] = True
+                    print(f'{novo_adm} agora é um adm')
 
-        elif pessoa['login'] == novo_adm and pessoa['adm'] == True:
-            print('Usuario já é um ADM')
-            input('Pressione ENTER para retornar ao menu:')
-            menu_admin()
+                elif dado['login'] == novo_adm and dado['adm']:
+                    print('usuario já é um adm')
+                    time.sleep(2)
+                    opcoes_adm()
+        case 2:
+            novo_adm = speed_cast('dados.json', False)
+            dados = leitura_json('dados.json')
+            for dado in dados:
+                if dado['login'] == novo_adm and dado['adm'] == False:
+                    encontrado = True
+                    dado['adm'] = True
+                    print(f'{novo_adm} cadastrado como adm')
+
+    if encontrado:
+        with open(caminho,'w', encoding='utf-8') as arquivo:
+            json.dump(dados,arquivo, indent=4)
 
 def deletar_usuario():
+    dados = leitura_json('dados.json')
+    copiar_json('dados.json', 'backup.json')
+    caminho = procura_caminho('dados.json')
 
     usuario = input('Informe o usuario que deseja deletar: ')
 
-    for indice, pessoa in enumerate(pessoas):
-        if usuario == pessoa['login']:
-            del pessoa[indice]
+    for indice, dado in enumerate(dados):
+        if usuario == dado['login']:
+            dados.pop(indice)
 
-def opcoes():
+    with open(caminho, 'w', encoding='utf') as folder:
+        json.dump(dados,folder, indent=4)
+
+def opcoes_adm():
     #/ lieralmente switch case do C
+    menu_admin()
 
-    escolha = int(input('\nEscolha uma opção ')) 
+    escolha = int(input('\nEscolha uma opção '))
     match escolha:
         case 1: # Chama a função entrar
             novo_admin()
         case 2:
-            trocar_senha()
+            trocar_senha_adm()
         case 3:
             deletar_usuario()
         case 4:
-            listar_usuarios()
+            listar_usuarios(opcoes_adm)
         case 5:
             fechar()
 
