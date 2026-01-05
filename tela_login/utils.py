@@ -3,6 +3,8 @@ import hashlib
 import json
 import time
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def trocar_senha_adm():
     copiar_json('dados.json', 'backup.json')
     dados = leitura_json('dados.json')
@@ -67,18 +69,21 @@ def remove_espaco(string):
     return string_correta
 
 def procura_caminho(nome_arquivo):
-    caminho = os.path.join(os.path.dirname(__file__), nome_arquivo)
+    global BASE_DIR
+    caminho = os.path.join(BASE_DIR, 'data', nome_arquivo)
     return caminho
 
 def leitura_json(nome_arquivo):
-        caminho = os.path.join(os.path.dirname(__file__), nome_arquivo)
+        global BASE_DIR
+        caminho = os.path.join(BASE_DIR, 'data', nome_arquivo)
         with open(caminho, 'r', encoding = 'utf-8') as arquivo:
             dados = json.load(arquivo)
             return dados
 
 def copiar_json(nome_arquivo, nome_backup):
-        caminho = os.path.join(os.path.dirname(__file__), nome_arquivo)
-        caminho_backup = os.path.join(os.path.dirname(__file__), nome_backup)
+        global BASE_DIR
+        caminho = os.path.join(BASE_DIR, 'data', nome_arquivo)
+        caminho_backup = os.path.join(BASE_DIR, 'data', nome_backup)
         dados = leitura_json(caminho)
         with open(caminho_backup, 'w', encoding = 'utf-8') as backup:
                 json.dump(dados, backup, indent=4)
@@ -131,7 +136,6 @@ def limpar_tela():
 
     os.system('cls')
     print('--------------------------------------------------')
-
 
 def fechar():
 
