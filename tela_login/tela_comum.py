@@ -76,7 +76,7 @@ def cadastrar():
         erro_arquivo()
         opcoes()
         
-    #copiar_json('dados.json', 'backup.json')
+    copiar_json('dados.json', 'backup.json')
 
     i = 0  
 
