@@ -33,5 +33,12 @@
         "adm": false,
         "pergunta": "123",
         "resposta": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+    },
+    {
+        "login": "xablau",
+        "senha": "32033527c7c377fe742d628bdcd64ca6da2e5ca6d327c97fcd35d8b2785f8f1c",
+        "adm": false,
+        "pergunta": "nome do cachorro",
+        "resposta": "cccf52f3d03c5072ee64a136f74fc56b27e04f15ffe5d1d277d58ab18d94b327"
     }
 ]
