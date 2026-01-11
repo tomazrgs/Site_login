@@ -75,15 +75,15 @@ def procura_caminho(nome_arquivo):
 
 def leitura_json(nome_arquivo):
         global BASE_DIR
-        caminho = os.path.join(BASE_DIR, 'data', nome_arquivo)
+        caminho = procura_caminho(nome_arquivo)
         with open(caminho, 'r', encoding = 'utf-8') as arquivo:
             dados = json.load(arquivo)
             return dados
 
 def copiar_json(nome_arquivo, nome_backup):
         global BASE_DIR
-        caminho = os.path.join(BASE_DIR, 'data', nome_arquivo)
-        caminho_backup = os.path.join(BASE_DIR, 'data', nome_backup)
+        caminho = procura_caminho(nome_arquivo)
+        caminho_backup = procura_caminho(nome_arquivo)
         dados = leitura_json(caminho)
         with open(caminho_backup, 'w', encoding = 'utf-8') as backup:
                 json.dump(dados, backup, indent=4)

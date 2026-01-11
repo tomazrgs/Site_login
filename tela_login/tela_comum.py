@@ -124,11 +124,10 @@ def cadastrar():
 
     novo_usuario = {'login': usuario , 'senha': senha_criptografada, 'adm': False, 'pergunta': pergunta, 'resposta': resposta}
 
-    try:
-        with open(endereco, 'w', encoding='utf-8') as file:
-            dados.append(novo_usuario)
-            json.dump(dados, file, indent=4)
-    except: print('lambe minha bola')
+    with open(endereco, 'w', encoding='utf-8') as file:
+        dados.append(novo_usuario)
+        json.dump(dados, file, indent=4)
+  
 
     print(f'{usuario} seu cadastro foi feito com sucesso!! ')
     time.sleep(2)

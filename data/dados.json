@@ -26,5 +26,12 @@
         "adm": true,
         "pergunta": "nome do gato laranja",
         "resposta": "8cfde6efdfc4ed5ab1f6acbbd1ba49bf31932f84d0a4c090eb41c7d151e8b180"
+    },
+    {
+        "login": "123",
+        "senha": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+        "adm": false,
+        "pergunta": "123",
+        "resposta": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
     }
 ]

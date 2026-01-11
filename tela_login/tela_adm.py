@@ -22,7 +22,7 @@ def novo_admin():
     limpar_tela()
 
     print('1: Usuario existente\n' \
-          '2: Usuario não existente\n')
+        '2: Usuario não existente\n')
 
     escolha = int(input('Escolha uma opção: '))
 
