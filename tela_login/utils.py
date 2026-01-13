@@ -2,10 +2,57 @@ import os
 import hashlib
 import json
 import time
+import logging
+import random
+
+from log_config import get_logger
+
+logger = get_logger(__name__)
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def trocar_senha_adm():
+
+def increment_pergunta(user):
+    limpar_tela()
+    caminho = procura_caminho('dados.json')
+    dados = leitura_json('dados.json')
+
+    print('Como primeiro acesso precisamos de mais umas informações: \n')
+    pergunta = input('Escolha uma pergunta de seguranca: ')
+    resposta = input('Qual a resposta: ')
+
+    for dado in dados:
+        if dado['login'] == user:
+            dado['primeiro acesso'] = False
+            dado['pergunta'] = pergunta
+            dado['resposta'] = resposta
+
+    try:
+        with open(caminho, 'w', encoding='utf-8') as file:
+            json.dump(dados, file,indent=4)
+
+        logger.info(f'{user} registrou sua pergunta de segurança')
+    except:
+        FileNotFoundError
+        logger.error(f'Arquivo não encontrado ou corrompido.')
+
+    print('Cadastro atualizado com sucesso.')
+        
+def gera_id():
+    identifica = ''
+    while len(identifica) < 6:
+        concat = str(random.randint(0,9))
+        identifica += concat
+    return identifica
+
+def verifica_vazio(string, validacao):
+        while string == '':
+            string = input(f'Insira um {validacao} valida: ')
+            string = remove_espaco(string)
+        return string
+
+def trocar_senha_adm(user):
     copiar_json('dados.json', 'backup.json')
     dados = leitura_json('dados.json')
     endereco = procura_caminho('dados.json')
@@ -25,6 +72,7 @@ def trocar_senha_adm():
     if  senha_trocada:
         with open(endereco, 'w', encoding= 'utf-8') as arquivo:
             json.dump(dados, arquivo, indent=4)
+        logger.info(f'{user} trocou a senha de {usuario}.')
         print('senha alterada com sucesso')
     else: print('Insira um usuario existente')
 
@@ -51,6 +99,7 @@ def trocar_senha_validacao():
         if  senha_trocada:
             with open(endereco, 'w', encoding= 'utf-8') as arquivo:
                 json.dump(dados, arquivo, indent=4)
+            logger.info(f'{usuario} trocou a senha pela pergunta secreta.')
             print('Senha alterada com sucesso')
 
     else: print('Insira um usuario existente')
@@ -75,22 +124,22 @@ def procura_caminho(nome_arquivo):
 
 def leitura_json(nome_arquivo):
         global BASE_DIR
-        caminho = procura_caminho(nome_arquivo)
+        caminho = os.path.join(BASE_DIR, 'data', nome_arquivo)
         with open(caminho, 'r', encoding = 'utf-8') as arquivo:
             dados = json.load(arquivo)
             return dados
 
 def copiar_json(nome_arquivo, nome_backup):
         global BASE_DIR
-        caminho = procura_caminho(nome_arquivo)
-        caminho_backup = procura_caminho(nome_arquivo)
+        caminho = os.path.join(BASE_DIR, 'data', nome_arquivo)
+        caminho_backup = os.path.join(BASE_DIR, 'data', nome_backup)
         dados = leitura_json(caminho)
         with open(caminho_backup, 'w', encoding = 'utf-8') as backup:
                 json.dump(dados, backup, indent=4)
 
 def criptografa(senha):
 
-    #/ Chamada quando necessario criptografar uma senha, ou ate mesmo outra coisa, criptografa e devolve qualquer entrada criptografada.
+    #/ Chamada quando necessario fazer hash.
 
     cripografada = hashlib.sha256(senha.encode('utf-8'))
     criptografada = cripografada.hexdigest()
@@ -100,7 +149,7 @@ def speed_cast(arquivo, adm):
     dados = leitura_json(arquivo)
     caminho = procura_caminho(arquivo)
 
-    usuario = input('Informe o nome do usuario: ')
+    usuario = input('Informe o nome do usuario: ').lower()
     usuario = remove_espaco(usuario)
 
     senha = input('Informe a senha do usuario: ')
@@ -111,15 +160,27 @@ def speed_cast(arquivo, adm):
         if dado['login'] == usuario:
             print('este usuario ja existe.')
 
-    novo_usuario = {'login': usuario, 'senha': senha, 'adm': adm}
+    identifica = gera_id()
+
+    novo_usuario = {
+        'ID': identifica, 
+        'login': usuario, 
+        'senha': senha, 
+        'adm': adm,
+        'primeiro acesso': True
+        }
     dados.append(novo_usuario)
 
-    with open(caminho, 'w', encoding='utf-8' ) as folder:
-        json.dump(dados, folder, indent=4)
+    try:
+        with open(caminho, 'w', encoding='utf-8' ) as folder:
+            json.dump(dados, folder, indent=4)
+    except():
+        FileNotFoundError
+        logger.erro(f'Arquivo não pode ser encontrado ou aberto')
 
     return usuario
 
-def listar_usuarios(menu):
+def listar_usuarios(menu, user):
     #/ Pega usuario por usuario e imprime na tela.
     dados = leitura_json('dados.json')
 
@@ -127,8 +188,9 @@ def listar_usuarios(menu):
         print(f'-{dado['login']}')
 
     input('Pressione enter para retornar')
+    logger.info(f'{user} solicitou lista de usuarios.')
     time.sleep(1)
-    menu()
+    menu(user)
 
 def limpar_tela():
 
