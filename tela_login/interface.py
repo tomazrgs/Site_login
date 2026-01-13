@@ -1,7 +1,11 @@
 import time
 
-
 from utils import limpar_tela
+
+def stile(string):
+    print('--------------------------------------------------')
+    print(string)
+    print('--------------------------------------------------')
 
 def erro_arquivo():
     FileNotFoundError
@@ -10,6 +14,7 @@ def erro_arquivo():
     print('Arquivo não encontrado')
     print('--------------------------------------------------')
     time.sleep(2)
+
 
 def voltar_menu(menu):
     print('--------------------------------------------------')
@@ -20,6 +25,7 @@ def voltar_menu(menu):
 def menu():
 
     limpar_tela()
+    print('--------------------------------------------------')
     print('\n1: Entrar ' 
     '\n2: Cadastrar' 
     '\n3: Lista de usuários'
@@ -29,6 +35,7 @@ def menu():
 def menu_admin():
 
     limpar_tela()
+    print('--------------------------------------------------')
     print('--bem vindo ao menu de adm--')
     
     print('\n1: Cadastrar outro adm ' 
@@ -41,6 +48,6 @@ def menu_admin():
 def erro_login_cad():
     print('Usuario ou senha invalidos por favor tete novamente.')
     time.sleep(2)
-    
+
 if __name__ == '__main__':
     pass
