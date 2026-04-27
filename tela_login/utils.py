@@ -4,8 +4,9 @@ import json
 import time
 import logging
 import random
+import uuid
 
-from log_config import get_logger
+from .log_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -40,17 +41,14 @@ def increment_pergunta(user):
     print('Cadastro atualizado com sucesso.')
         
 def gera_id():
-    identifica = ''
-    while len(identifica) < 6:
-        concat = str(random.randint(0,9))
-        identifica += concat
+    identifica = str(uuid.uuid4())
     return identifica
 
 def verifica_vazio(string, validacao):
-        while string == '':
-            string = input(f'Insira um {validacao} valida: ')
-            string = remove_espaco(string)
-        return string
+    while string == '':
+        string = input(f'Insira um {validacao} valida: ')
+        string = remove_espaco(string)
+    return string
 
 def trocar_senha_adm(user):
     copiar_json('dados.json', 'backup.json')

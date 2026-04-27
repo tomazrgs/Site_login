@@ -1,34 +1,37 @@
 import time
 import json
-import logging
 
-from log_config import get_logger
+from tela_login.log_config import get_logger
 
-from tela_adm import opcoes_adm
+from tela_login.tela_adm import opcoes_adm
 
-from interface import menu
-from interface import erro_login_cad
-from interface import erro_arquivo
-from interface import stile
+from data.org import Usuario
+from data.org import Contas
 
-from utils import increment_pergunta
-from utils import gera_id
-from utils import criptografa
-from utils import limpar_tela
-from utils import fechar
-from utils import listar_usuarios
-from utils import remove_espaco
-from utils import leitura_json
-from utils import copiar_json
-from utils import procura_caminho
-from utils import trocar_senha_validacao
-from utils import verifica_vazio
+from tela_login.interface import menu
+from tela_login.interface import erro_login_cad
+from tela_login.interface import erro_arquivo
+from tela_login.interface import stile
+
+
+from tela_login.utils import gera_id
+from tela_login.utils import criptografa
+from tela_login.utils import limpar_tela
+from tela_login.utils import fechar
+from tela_login.utils import listar_usuarios
+from tela_login.utils import remove_espaco
+from tela_login.utils import leitura_json
+from tela_login.utils import copiar_json
+from tela_login.utils import procura_caminho
+from tela_login.utils import trocar_senha_validacao
+from tela_login.utils import verifica_vazio
 
 logger = get_logger(__name__)
+contas = Contas()
 
 
 def entrar():
-
+    global contas
     global logger
 
     x = 0
@@ -46,34 +49,37 @@ def entrar():
 
         usuario = input('Informe seu usuario: ').lower() 
         usuario = remove_espaco(usuario)
-
         usuario = verifica_vazio(usuario, 'usuario')
 
         senha = input(f'Olá {usuario} informe sua senha: ')
         senha = remove_espaco(senha)
-
         senha = verifica_vazio(senha, 'senha')
 
         senha_criptografada = criptografa(senha)
 
-        for dado in dados:
-            if dado['login'] == usuario and dado['senha'] == senha_criptografada and not dado['primeiro acesso']:
-                usuario_encontrado = True
-                if dado['adm']:
-                    logger.info(f'{usuario} foi logado como adm.')
-                    opcoes_adm(usuario)
-                else: print('logado com sucesso'), logger.info(f'{usuario} logado com sucesso')
-            elif dado['login'] == usuario and dado['primeiro acesso']:
-                usuario_encontrado = True
-                increment_pergunta(usuario)
-                opcoes()
+        contas.adduser(dados)
 
-        if not usuario_encontrado:
+        verifica = contas.verifi_login(usuario,senha_criptografada)
+
+        adm = contas.verifi_adm(usuario)
+
+        if verifica:
+            print(f'{usuario} logado com sucesso')
+
+            logger.info(f'{usuario} logado com sucesso')
+
+            usuario_encontrado == True
+            
+            if adm:
+                logger.info(f'{usuario} foi logado como adm.')
+                
+                opcoes_adm(usuario)
+
+                # increment_pergunta(usuario)
+        elif not verifica:
             x += 1
             logger.warning('tentativa de login, usuario nao encontrado')
             erro_login_cad()
-        elif usuario_encontrado:
-            break
             
     if x == 3:
         limpar_tela()
@@ -88,6 +94,9 @@ def entrar():
             opcoes()
 
 def cadastrar():
+    global contas
+    global logger
+
     try:
         dados = leitura_json('dados.json')
     except:
@@ -96,23 +105,29 @@ def cadastrar():
         opcoes()
         
     copiar_json('dados.json', 'backup.json')
-
-    i = 0  
-
-    limpar_tela()
-    usuario = input('Escolha um nome de usuario: \n').lower()
-    usuario = remove_espaco(usuario)
     endereco = procura_caminho('dados.json')
 
     for dado in dados:
-        while dado['login'] == usuario or usuario == '':
-            usuario = input('Usuario invalido, por favor tente outro: ')
-            i += 1
-            if i == 3:
-                print('Tentativas excedidas, por favor tente novamente do menu')
-                logger.warning('tentativas de cadastro excedidas.')
-                time.sleep(2)
-                opcoes()
+        contas.adduser(Usuario.from_dict(dado))
+
+    i = 0
+
+    limpar_tela()
+    usuario = input('Escolha um nome de usuario: \n').lower()
+    usuario = verifica_vazio(usuario, 'usuario')
+    
+    valida = contas.verifi_exist(usuario)
+
+    print(valida)
+
+    while usuario == '' or valida:
+        usuario = input('Usuario invalido, por favor tente outro: ')
+        i += 1
+        if i == 3:
+            print('Tentativas excedidas, por favor tente novamente do menu')
+            logger.warning('tentativas de cadastro excedidas.')
+            time.sleep(2)
+            opcoes()
 
     senha = input('Insira a senha: ')
     senha = remove_espaco(senha) 
@@ -139,22 +154,11 @@ def cadastrar():
         time.sleep(2)
         opcoes()
 
-    pergunta = input('Escolha uma pergunta de segurança: ')
-    resposta = input('Qual a resposta: ').lower()
-    resposta = criptografa(resposta)
-
     identifica = gera_id()
 
-    novo_usuario = {
-        'ID': identifica , 
-        'login': usuario , 
-        'senha': senha_criptografada, 
-        'adm': False, 
-        'primeiro acesso': False , 
-        'pergunta': pergunta, 
-        'resposta': resposta
-        }
-    dados.append(novo_usuario)
+    novo_usuario = Usuario(identifica, usuario,senha_criptografada)
+
+    dados.append(novo_usuario.to_dict())
 
     with open(endereco, 'w', encoding='utf-8') as file:
         json.dump(dados, file, indent=4)

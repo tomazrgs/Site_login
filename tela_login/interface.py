@@ -1,6 +1,6 @@
 import time
 
-from utils import limpar_tela
+from .utils import limpar_tela
 
 def stile(string):
     print('--------------------------------------------------')

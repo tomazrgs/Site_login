@@ -1,22 +1,22 @@
 import time
 import json
-import logging
 
-from log_config import get_logger
 
-from interface import menu_admin
-from interface import erro_arquivo
+from .log_config import get_logger
 
-from utils import limpar_tela
-from utils import listar_usuarios
-from utils import fechar
-from utils import copiar_json
-from utils import leitura_json
-from utils import procura_caminho
-from utils import remove_espaco
-from utils import procura_caminho
-from utils import speed_cast
-from utils import trocar_senha_adm
+from .interface import menu_admin
+from .interface import erro_arquivo
+
+from .utils import limpar_tela
+from .utils import listar_usuarios
+from .utils import fechar
+from .utils import copiar_json
+from .utils import leitura_json
+
+from .utils import remove_espaco
+from .utils import procura_caminho
+from .utils import speed_cast
+from .utils import trocar_senha_adm
 
 logger = get_logger(__name__)
 
