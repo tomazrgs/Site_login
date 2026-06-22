@@ -1,19 +1,16 @@
-import os
-import random
-
-class Usuario: 
-    def __init__(self,ID= '', login='', senha='',adm= False): 
-        self._ID = ID 
+class Usuario:
+    def __init__(self,ID, login, senha,role = 'user'):
+        self._ID = ID
         self.login = login 
         self._senha = senha
-        self._adm = adm
+        self._role = role
 
     def to_dict(self): 
         return { 
             "ID": self._ID, 
             "login": self.login, 
             "senha": self._senha, 
-            "adm":self._adm
+            "role":self._role
             } 
     
     @classmethod 
@@ -22,7 +19,7 @@ class Usuario:
             dados['ID'], 
             dados['login'], 
             dados['senha'],
-            dados['adm'],
+            dados['role'],
            
         )
 
@@ -31,10 +28,10 @@ class Usuario:
         
     @property 
     def ativar(self): 
-        return 'Status da conta: ☑' if self._adm else 'Status da conta: ☐' 
+        return 'Status da conta: ☑' if self._role else 'Status da conta: ☐'
         
     def promover(self): 
-        self._adm = not self._adm 
+        self._role = not self._role
             
 
 
@@ -52,7 +49,7 @@ class Contas:
 
     def verifi_adm(self,usuario):
         for login in self.lista:
-            if login.login == usuario.login and login.adm == True:
+            if login.login == usuario.login and login.role == True:
                 return True
         return False
 

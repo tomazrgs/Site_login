@@ -100,7 +100,7 @@ def cadastrar():
     try:
         dados = leitura_json('dados.json')
     except:
-        logger.error('Arquivo não esta conseguindo ser leito.')
+        logger.error('Arquivo não esta conseguindo ser lido.')
         erro_arquivo()
         opcoes()
         
