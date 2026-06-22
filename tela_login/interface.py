@@ -1,6 +1,10 @@
 import time
 
-from .utils import limpar_tela
+from back.utils import limpar_tela
+
+def menu_sim_nao():
+    print('1 - sim \n' 
+        '2- não')
 
 def stile(string):
     print('--------------------------------------------------')
@@ -14,7 +18,6 @@ def erro_arquivo():
     print('Arquivo não encontrado')
     print('--------------------------------------------------')
     time.sleep(2)
-
 
 def voltar_menu(menu):
     print('--------------------------------------------------')
