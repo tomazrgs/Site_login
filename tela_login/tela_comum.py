@@ -29,7 +29,7 @@ from back.utils import verifica_vazio
 
 logger = get_logger(__name__)
 
-# resend.api_key = 're_2gzD2hqG_8dvjR4gaT2TcyABTkPpMGZtG'
+
 
 contas = Contas()
 
