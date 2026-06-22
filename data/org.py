@@ -1,66 +1,79 @@
 class Usuario:
-    def __init__(self,ID, login, senha,role = 'user'):
-        self._ID = ID
-        self.login = login 
+    def __init__(self, ID, login, senha, role = 'user'):
+        self.ID = ID
+        self.login = login
         self._senha = senha
         self._role = role
 
-    def to_dict(self): 
-        return { 
-            "ID": self._ID, 
-            "login": self.login, 
-            "senha": self._senha, 
-            "role":self._role
-            } 
+    def __repr__(self):
+        return f'ID: {self.ID}, Usuario: {self.login}, Senha: {self._senha}, Role: {self._role}'
     
-    @classmethod 
-    def from_dict(cls, dados): 
-        return cls( 
-            dados['ID'], 
-            dados['login'], 
-            dados['senha'],
-            dados['role'],
-           
+    def to_dict(self):
+        return {
+            "ID": self.ID,
+            "login": self.login,
+            "senha": self._senha,
+            "role":self._role
+        }
+    
+    @classmethod
+    def from_dict(cls, dados):
+        return cls(
+                dados['ID'],
+                dados['login'],
+                dados['senha'],
+                dados['role']
         )
 
-    def __repr__(self): 
-        return f'ID: {self._ID}, Usuario: {self.login}, Senha: {self._senha}' 
-        
-    @property 
-    def ativar(self): 
-        return 'Status da conta: ☑' if self._role else 'Status da conta: ☐'
-        
-    def promover(self): 
-        self._role = not self._role
-            
+    def troca_senha(self,user, senha):
+        if self.login == user and self._senha == senha:
+            nova_senha = input('Informe a senha')
+            self._senha = nova_senha
+            return True
+        return False
+    
+    def promover(self, user):
+        if user == True and self.login['role'] != 'adm':
+            self.login['role'] = 'adm'
+            return True
+        else: return False 
 
 
-class Contas: 
-    def __init__(self): 
+    # @property
+    # def ativar(self):
+    #     return 'Status da conta: ☑' if self._role else 'Status da conta: ☐'
+    
+
+
+class Contas():
+    def __init__(self,):
         self.lista = []
 
-    def adduser(self,obj_usuario): 
+    def adduser(self,obj_usuario):
         assert isinstance(obj_usuario, Usuario)
         self.lista.append(obj_usuario)
-        
-    def listar(self): 
-        for u in self.lista: 
+
+    def listar(self):
+        for u in self.lista:
             print(u)
 
-    def verifi_adm(self,usuario):
+    def verifica_existencia(self,user):
         for login in self.lista:
-            if login.login == usuario.login and login.role == True:
-                return True
-        return False
-
-    def verifi_exist(self,user): 
-        for login in self.lista: 
-            if login.login == user: 
+            if login.login == user:
                 return True
         return False
     
-    def verifi_login(self, user, senha):
+    def informa_role(self,user):
         for login in self.lista:
-            if login.login == user and login.senha == senha:
-                return True
+            if login.login == user:
+                return login._role
+        
+    
+    def verifica_login(self, user , senha):
+        for login in self.lista:
+            if login.login == user and login._senha == senha:
+                return login
         return False
+
+if __name__ == '__main__':
+    pass

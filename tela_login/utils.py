@@ -2,11 +2,11 @@ import os
 import hashlib
 import json
 import time
-import logging
 import random
 import uuid
+import string
 
-from .log_config import get_logger
+from back.log_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -14,31 +14,13 @@ logger = get_logger(__name__)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def increment_pergunta(user):
-    limpar_tela()
-    caminho = procura_caminho('dados.json')
-    dados = leitura_json('dados.json')
+def codig_seguranca():
+    codigo = ''
 
-    print('Como primeiro acesso precisamos de mais umas informações: \n')
-    pergunta = input('Escolha uma pergunta de seguranca: ')
-    resposta = input('Qual a resposta: ')
-
-    for dado in dados:
-        if dado['login'] == user:
-            dado['primeiro acesso'] = False
-            dado['pergunta'] = pergunta
-            dado['resposta'] = resposta
-
-    try:
-        with open(caminho, 'w', encoding='utf-8') as file:
-            json.dump(dados, file,indent=4)
-
-        logger.info(f'{user} registrou sua pergunta de segurança')
-    except:
-        FileNotFoundError
-        logger.error(f'Arquivo não encontrado ou corrompido.')
-
-    print('Cadastro atualizado com sucesso.')
+    while len(codigo) < 6:
+        codigo += str(random.randint(0,9))
+        codigo += random.choice(string.ascii_letters)
+    return codigo
         
 def gera_id():
     identifica = str(uuid.uuid4())
@@ -74,42 +56,40 @@ def trocar_senha_adm(user):
         print('senha alterada com sucesso')
     else: print('Insira um usuario existente')
 
-def trocar_senha_validacao():
-    copiar_json('dados.json', 'backup.json')
-    dados = leitura_json('dados.json')
-    endereco = procura_caminho('dados.json')
+def trocar_senha_validacao(usuario ,codigo_enviado):
+    try:
+        copiar_json('dados.json', 'backup.json')
+        dados = leitura_json('dados.json')
+        endereco = procura_caminho('dados.json')
+    except:
+        FileNotFoundError
 
-    senha_trocada = False
+    limpar_tela()
 
-    usuario = input('informe o nome de usuario: ')
-    
-    valida_pergunta = valida_resposta(usuario)
+    codigo_informado = input('informe o código de segurança por favor: ')
 
-    if valida_pergunta:
+    if codigo_informado == codigo_enviado:
+        senha = input('Por favor informe uma nova senha: ')
+        senha = verifica_vazio(senha, 'senha')
+
         for dado in dados:
-            if usuario == dado['login']:
-                nova_senha = input('Digite a nova senha: ')
-                nova_senha = remove_espaco(nova_senha)
-                senha_criptografada = criptografa(nova_senha)
-                dado['senha'] = senha_criptografada
-                senha_trocada = True
+            if dado['login'] == usuario:
+                senha = criptografa(senha)
+                dado['senha'] = senha
+    try:
+        with open(endereco, 'w', encoding='utf-8') as file:
+            json.dump(dados, file, indent=4)
+    except:
+        FileExistsError
 
-        if  senha_trocada:
-            with open(endereco, 'w', encoding= 'utf-8') as arquivo:
-                json.dump(dados, arquivo, indent=4)
-            logger.info(f'{usuario} trocou a senha pela pergunta secreta.')
-            print('Senha alterada com sucesso')
-
-    else: print('Insira um usuario existente')
-
-def valida_resposta(usuario):
-    dados = leitura_json('dados.json')
-    for dado in dados:
-        if usuario == dado['login']:
-            resposta = input(dado['pergunta'])
-            if resposta == dado['resposta']:
-                return True
-            else: return False
+# def valida_resposta(usuario):
+#     dados = leitura_json('dados.json')
+#     for dado in dados:
+#         if usuario == dado['login']:
+#             resposta = input(dado['pergunta'])
+#             if resposta == dado['resposta']:
+#                 return True
+#             else: return False
     
 def remove_espaco(string):
     string_correta = string.replace(' ','')
@@ -142,41 +122,6 @@ def criptografa(senha):
     cripografada = hashlib.sha256(senha.encode('utf-8'))
     criptografada = cripografada.hexdigest()
     return criptografada
-
-def speed_cast(arquivo, adm):
-    dados = leitura_json(arquivo)
-    caminho = procura_caminho(arquivo)
-
-    usuario = input('Informe o nome do usuario: ').lower()
-    usuario = remove_espaco(usuario)
-
-    senha = input('Informe a senha do usuario: ')
-    senha = remove_espaco(senha)
-    senha = criptografa(senha)
-
-    for dado in dados:
-        if dado['login'] == usuario:
-            print('este usuario ja existe.')
-
-    identifica = gera_id()
-
-    novo_usuario = {
-        'ID': identifica, 
-        'login': usuario, 
-        'senha': senha, 
-        'adm': adm,
-        'primeiro acesso': True
-        }
-    dados.append(novo_usuario)
-
-    try:
-        with open(caminho, 'w', encoding='utf-8' ) as folder:
-            json.dump(dados, folder, indent=4)
-    except():
-        FileNotFoundError
-        logger.erro(f'Arquivo não pode ser encontrado ou aberto')
-
-    return usuario
 
 def listar_usuarios(menu, user):
     #/ Pega usuario por usuario e imprime na tela.
