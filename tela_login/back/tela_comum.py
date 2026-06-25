@@ -2,8 +2,8 @@ import time
 import json
 import resend
 
-from manipula.usuario import Usuario
-from manipula.usuario import Contas
+from data.usuario import Usuario
+from data.usuario import Contas
 
 from back.log_config import get_logger
 
