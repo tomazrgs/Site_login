@@ -1,6 +1,6 @@
 import time
 
-from back.utils import limpar_tela
+from tela_login.back.utils import limpar_tela
 
 def menu_sim_nao():
     print('1 - sim \n' 

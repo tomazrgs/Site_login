@@ -2,36 +2,36 @@ import time
 import json
 import resend
 
-from data.usuario import Usuario
-from data.usuario import Contas
+from tela_login.data.usuario import Usuario
+from tela_login.data.usuario import Contas
 
-from back.log_config import get_logger
+from tela_login.back.log_config import get_logger
 
-from back.tela_adm import opcoes_adm
+from tela_login.back.tela_adm import opcoes_adm
 
-from back.interface import menu
-from back.interface import erro_login_cad
-from back.interface import erro_arquivo
-from back.interface import stile
+from tela_login.back.interface import menu
+from tela_login.back.interface import erro_login_cad
+from tela_login.back.interface import erro_arquivo
+from tela_login.back.interface import stile
 
-from back.utils import codig_seguranca
-from back.utils import gera_id
-from back.utils import criptografa
-from back.utils import limpar_tela
-from back.utils import fechar
-from back.utils import listar_usuarios
-from back.utils import remove_espaco
-from back.utils import leitura_json
-from back.utils import copiar_json
-from back.utils import procura_caminho
-from back.utils import trocar_senha_validacao
-from back.utils import verifica_vazio
+from tela_login.back.utils import codig_seguranca
+from tela_login.back.utils import gera_id
+from tela_login.back.utils import criptografa
+from tela_login.back.utils import limpar_tela
+from tela_login.back.utils import fechar
+from tela_login.back.utils import listar_usuarios
+from tela_login.back.utils import remove_espaco
+from tela_login.back.utils import leitura_json
+from tela_login.back.utils import copiar_json
+from tela_login.back.utils import procura_caminho
+from tela_login.back.utils import trocar_senha_validacao
+from tela_login.back.utils import verifica_vazio
 
 logger = get_logger(__name__)
 
-
-
 contas = Contas()
+
+tentativas = 0
 
 def entrar():
     global contas
@@ -41,14 +41,16 @@ def entrar():
     logado = False
 
     while x < 3 and not logado:
-
+        # tenta abrir o arquivo leitura_json, caso falhe adiciona um erro ao log de tentativa de login e retorna ao menu.
         try:
             dados = leitura_json('dados.json')
         except:
             FileNotFoundError
             logger.error('Arquivo não esta conseguindo ser leito.')
+            tentativas += 1
             opcoes()
 
+        # puxa funcao que transforma obj d classe em dicionario para adicionar a lista em Contas para manipulacao e leitura correta.
         for dado in dados:
             dado = Usuario.from_dict(dado)
             contas.adduser(dado)
@@ -57,10 +59,8 @@ def entrar():
         usuario = remove_espaco(usuario)
         usuario = verifica_vazio(usuario, 'usuario')
 
-        senha = input(f'Olá {usuario} informe sua senha: ')
-        senha = remove_espaco(senha)
+        senha = remove_espaco(input(f'Olá {usuario} informe sua senha: '))
         senha = verifica_vazio(senha, 'senha')
-
         senha_criptografada = criptografa(senha)
 
         usuario_encontrado = contas.verifica_existencia(usuario)
@@ -70,6 +70,7 @@ def entrar():
         logado = contas.verifica_login(usuario,senha_criptografada)
         time.sleep(3)
 
+        # otimizar esta verificazao, muito grande com mt if e else.
         if not usuario_encontrado:
             x += 1
             logger.warning('tentativa de login, usuario nao encontrado')
@@ -83,7 +84,7 @@ def entrar():
             logado = contas.verifica_login(usuario,senha_criptografada)
             if logado:
                 print(f'Seja bem vindo {usuario}')
-                time.sleep(2)
+                time.sleep(1)
                 logger.warning(f'{usuario} logou com sucesso')
             else:
                 x += 1

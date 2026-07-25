@@ -6,7 +6,7 @@ import random
 import uuid
 import string
 
-from back.log_config import get_logger
+from tela_login.back.log_config import get_logger
 
 logger = get_logger(__name__)
 

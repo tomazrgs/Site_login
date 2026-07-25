@@ -2,23 +2,23 @@ import time
 import json
 
 # from manipula.usuario import Usuario
-from manipula.usuario import Contas
-from manipula.usuario import Usuario
+from tela_login.data.usuario import Contas
+from tela_login.data.usuario import Usuario
 
-from back.log_config import get_logger
+from tela_login.back.log_config import get_logger
 
-from back.interface import menu_admin
-from back.interface import erro_arquivo
+from tela_login.back.interface import menu_admin
+from tela_login.back.interface import erro_arquivo
 
-from back.utils import limpar_tela
-from back.utils import listar_usuarios
-from back.utils import fechar
-from back.utils import copiar_json
-from back.utils import leitura_json
-from back.utils import procura_caminho
-from back.utils import remove_espaco
-from back.utils import procura_caminho
-from back.utils import trocar_senha_adm
+from tela_login.back.utils import limpar_tela
+from tela_login.back.utils import listar_usuarios
+from tela_login.back.utils import fechar
+from tela_login.back.utils import copiar_json
+from tela_login.back.utils import leitura_json
+from tela_login.back.utils import procura_caminho
+from tela_login.back.utils import remove_espaco
+from tela_login.back.utils import procura_caminho
+from tela_login.back.utils import trocar_senha_adm
 
 logger = get_logger(__name__)
 contas = Contas()
@@ -93,7 +93,8 @@ def novo_admin(adm):
             case 1:
                 promocao_adm(adm)
             case 2:
-                cad_adm(user)
+                #cad_adm(user)
+                pass
 
     except:
         ValueError
