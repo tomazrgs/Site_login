@@ -25,12 +25,10 @@ class Usuario:
                 dados['role']
         )
 
-    def troca_senha(self,user, senha):
-        if self.login == user and self._senha == senha:
-            nova_senha = input('Informe a senha')
-            self._senha = nova_senha
-            return True
-        return False
+    def troca_senha(self,nova_senha):
+        self._senha = nova_senha
+        return self
+
     
     def promover(self, user):
         if user == True and self.login['role'] != 'adm':
@@ -46,7 +44,7 @@ class Usuario:
 
 
 class Contas():
-    def __init__(self,):
+    def __init__(self):
         self.lista = []
 
     def adduser(self,obj_usuario):
@@ -60,19 +58,24 @@ class Contas():
     def verifica_existencia(self,user):
         for login in self.lista:
             if login.login == user:
-                return True
+                return login.login
+        return False
+
+    def coleta_objeto(self,user):
+        for login in self.lista:
+            if login.login == user:
+                return login
         return False
     
     def informa_role(self,user):
         for login in self.lista:
             if login.login == user:
                 return login._role
-        
-    
-    def verifica_login(self, user , senha):
+
+    def verifica_login(self, user, senha):
         for login in self.lista:
             if login.login == user and login._senha == senha:
-                return login
+                return True
         return False
 
 if __name__ == '__main__':
