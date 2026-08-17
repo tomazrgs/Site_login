@@ -1,9 +1,10 @@
 import time
 import json
 import resend
+import mysql.connector
 
-from tela_login.data.usuario import Usuario
-from tela_login.data.usuario import Contas
+from tela_login.manipula.usuario import Usuario
+from tela_login.manipula.usuario import Contas
 
 from tela_login.back.log_config import get_logger
 

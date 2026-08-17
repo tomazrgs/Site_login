@@ -32,65 +32,57 @@ def verifica_vazio(string, validacao):
         string = remove_espaco(string)
     return string
 
-def trocar_senha_adm(user):
-    copiar_json('dados.json', 'backup.json')
-    dados = leitura_json('dados.json')
-    endereco = procura_caminho('dados.json')
-
-    senha_trocada = False
-
-    usuario = input('informe o nome de usuario: ')
-
-    for dado in dados:
-        if usuario == dado['login']:
-            nova_senha = input('Digite a nova senha: ')
-            nova_senha = remove_espaco(nova_senha)
-            senha_criptografada = criptografa(nova_senha)
-            dado['senha'] = senha_criptografada
-            senha_trocada = True
-
-    if  senha_trocada:
-        with open(endereco, 'w', encoding= 'utf-8') as arquivo:
-            json.dump(dados, arquivo, indent=4)
-        logger.info(f'{user} trocou a senha de {usuario}.')
-        print('senha alterada com sucesso')
-    else: print('Insira um usuario existente')
-
-def trocar_senha_validacao(usuario ,codigo_enviado):
-    try:
-        copiar_json('dados.json', 'backup.json')
-        dados = leitura_json('dados.json')
-        endereco = procura_caminho('dados.json')
-    except:
-        FileNotFoundError
-
-    limpar_tela()
-
-    codigo_informado = input('informe o código de segurança por favor: ')
-
-    if codigo_informado == codigo_enviado:
-        senha = input('Por favor informe uma nova senha: ')
-        senha = verifica_vazio(senha, 'senha')
-
-        for dado in dados:
-            if dado['login'] == usuario:
-                senha = criptografa(senha)
-                dado['senha'] = senha
-    try:
-        with open(endereco, 'w', encoding='utf-8') as file:
-            json.dump(dados, file, indent=4)
-    except:
-        FileExistsError
-
-# def valida_resposta(usuario):
+# def trocar_senha_adm(user):
+#     copiar_json('dados.json', 'backup.json')
 #     dados = leitura_json('dados.json')
+#     endereco = procura_caminho('dados.json')
+
+#     senha_trocada = False
+
+#     usuario = input('informe o nome de usuario: ')
+
 #     for dado in dados:
 #         if usuario == dado['login']:
-#             resposta = input(dado['pergunta'])
-#             if resposta == dado['resposta']:
-#                 return True
-#             else: return False
-    
+#             nova_senha = input('Digite a nova senha: ')
+#             nova_senha = remove_espaco(nova_senha)
+#             senha_criptografada = criptografa(nova_senha)
+#             dado['senha'] = senha_criptografada
+#             senha_trocada = True
+
+#     if  senha_trocada:
+#         with open(endereco, 'w', encoding= 'utf-8') as arquivo:
+#             json.dump(dados, arquivo, indent=4)
+#         logger.info(f'{user} trocou a senha de {usuario}.')
+#         print('senha alterada com sucesso')
+#     else: print('Insira um usuario existente')
+
+# def trocar_senha_validacao(usuario ,codigo_enviado):
+#     try:
+#         copiar_json('dados.json', 'backup.json')
+#         dados = leitura_json('dados.json')
+#         endereco = procura_caminho('dados.json')
+#     except:
+#         FileNotFoundError
+
+#     limpar_tela()
+
+#     codigo_informado = input('informe o código de segurança por favor: ')
+
+#     if codigo_informado == codigo_enviado:
+#         senha = input('Por favor informe uma nova senha: ')
+#         senha = verifica_vazio(senha, 'senha')
+
+#         for dado in dados:
+#             if dado['login'] == usuario:
+#                 senha = criptografa(senha)
+#                 dado['senha'] = senha
+#     try:
+#         with open(endereco, 'w', encoding='utf-8') as file:
+#             json.dump(dados, file, indent=4)
+#     except:
+#         FileExistsError
+
+
 def remove_espaco(string):
     string_correta = string.replace(' ','')
     return string_correta

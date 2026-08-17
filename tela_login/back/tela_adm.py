@@ -2,8 +2,8 @@ import time
 import json
 
 # from manipula.usuario import Usuario
-from tela_login.data.usuario import Contas
-from tela_login.data.usuario import Usuario
+from tela_login.manipula.usuario import Contas
+from tela_login.manipula.usuario import Usuario
 
 from tela_login.back.log_config import get_logger
 
