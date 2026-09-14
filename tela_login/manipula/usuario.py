@@ -1,27 +1,30 @@
 class Usuario:
-    def __init__(self, ID, login, senha, role = 'user'):
-        self.ID = ID
+    def __init__(self, userID, login, senha, email, role = 'user'):
+        self.userID = userID
         self.login = login
         self._senha = senha
+        self._email = email
         self._role = role
 
     def __repr__(self):
-        return f'ID: {self.ID}, Usuario: {self.login}, Senha: {self._senha}, Role: {self._role}'
+        return f'userID: {self.userID}, Usuario: {self.login}, Senha: {self._senha}, Role: {self._role}'
     
     def to_dict(self):
         return {
-            "ID": self.ID,
+            "userID": self.userID,
             "login": self.login,
             "senha": self._senha,
-            "role":self._role
+            "email": self._email,
+            "role": self._role
         }
     
     @classmethod
     def from_dict(cls, dados):
         return cls(
-                dados['ID'],
+                dados['userID'],
                 dados['login'],
                 dados['senha'],
+                dados['email'],
                 dados['role']
         )
 
