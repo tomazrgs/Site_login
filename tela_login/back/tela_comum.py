@@ -25,8 +25,8 @@ from tela_login.back.utils import remove_espaco
 from tela_login.back.utils import leitura_json
 from tela_login.back.utils import copiar_json
 from tela_login.back.utils import procura_caminho
-from tela_login.back.utils import trocar_senha_validacao
 from tela_login.back.utils import verifica_vazio
+from tela_login.back.utils import valida
 
 logger = get_logger(__name__)
 
@@ -115,8 +115,20 @@ def entrar():
                     "subject": "<h1>Recuperação de senha</h1>",
                     "html": f"<p><strong>Seu código de recuperação de senha {codigo} </strong></p>"
                 })
-            
-                trocar_senha_validacao(usuario,codigo)
+
+                time.sleep(2)
+
+                codigo_informado = input('Informe o codigo de seguranca que foi enviado a seu email: ')
+
+
+                if valida(codigo, codigo_informado):
+                    nova_senha = input('Informe sua nova senha:')
+
+                    
+                else: 
+                    print('codigo incorreto') 
+                    return opcoes()
+                
             else:
                 print('Usuario inesistente para solicitação de recuperação de senha')
                 time.sleep(1)
