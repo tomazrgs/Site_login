@@ -5,6 +5,7 @@ import time
 import random
 import uuid
 import string
+from email_validator import validate_email, EmailNotValidError
 
 from tela_login.back.log_config import get_logger
 
@@ -32,12 +33,20 @@ def verifica_vazio(string, validacao):
         string = remove_espaco(string)
     return string
 
+def verifica_email(email):
+    tentativas = 0
+
+    while tentativas <= 3:
+        try:
+            valid = validate_email(email)
+            return True, valid.email 
+        except: EmailNotValidError
+    return False
 
 def valida(correto, informado):
      if correto == informado:
           return True
      else: return False
-
 
 def remove_espaco(string):
     string_correta = string.replace(' ','')
