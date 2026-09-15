@@ -1,10 +1,12 @@
 import time
 import json
 import resend
+import dotenv
 import mysql.connector
 
 from tela_login.manipula.usuario import Usuario
 from tela_login.manipula.usuario import Contas
+from dotenv import load_dotenv
 
 from tela_login.back.log_config import get_logger
 
