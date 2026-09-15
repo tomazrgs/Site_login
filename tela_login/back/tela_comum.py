@@ -1,12 +1,14 @@
 import time
 import json
 import resend
-import dotenv
-import mysql.connector
+import os
+
+from dotenv import load_dotenv
+from email_validator import validate_email, EmailNotValidError
 
 from tela_login.manipula.usuario import Usuario
 from tela_login.manipula.usuario import Contas
-from dotenv import load_dotenv
+
 
 from tela_login.back.log_config import get_logger
 
@@ -29,6 +31,7 @@ from tela_login.back.utils import copiar_json
 from tela_login.back.utils import procura_caminho
 from tela_login.back.utils import verifica_vazio
 from tela_login.back.utils import valida
+from tela_login.back.utils import verifica_email
 
 logger = get_logger(__name__)
 
@@ -111,10 +114,13 @@ def entrar():
 
                 codigo = codig_seguranca()
 
+                load_dotenv()
+
+                resend.api_key = os.getenv('resend_key')
                 resend.Emails.send({
                     "from": "onboarding@resend.dev",
                     "to": "tomazgoncalvessantos@gmail.com",
-                    "subject": "<h1>Recuperação de senha</h1>",
+                    "subject": "Recuperação de senha",
                     "html": f"<p><strong>Seu código de recuperação de senha {codigo} </strong></p>"
                 })
 
@@ -143,6 +149,7 @@ def entrar():
 
 def cadastrar():
     global contas
+    global tentativas
 
     try:
         dados = leitura_json('dados.json')
@@ -183,19 +190,27 @@ def cadastrar():
     repet_senha = input('Digite a senha novamente: ')
     repet_senha = verifica_vazio(repet_senha, 'senha')
 
-    y = 0
 
-    while repet_senha != senha and y < 3:
-        y += 1
+    while repet_senha != senha and tentativas < 3:
+        tentativas += 1
         repet_senha = input('As senhas são diferentes, por favor digite a mesma senha: ')
         repet_senha = verifica_vazio(senha, 'senha')
-    if y == 3:
+    if tentativas == 3:
         print('tentativas excedidas, por favor tente novamente')
         logger.warning('tentativas de cadastro excedidas.')
         time.sleep(2)
         opcoes()
 
     senha_criptografada = criptografa(senha)
+
+    email = input('Informe seu email: ')
+
+    # verificar isso aqui depois lindao
+
+    email_validado = verifica_email(email)
+
+    if not email_validado:
+        opcoes()
 
     identifica = gera_id()
 
@@ -217,6 +232,10 @@ def cadastrar():
 
 def opcoes(): 
     menu()
+    global tentativas
+
+    tentativas = 0
+
     #/ lieralmente switch case do C
     try:
         escolha = int(input('\nEscolha uma opção: '))
