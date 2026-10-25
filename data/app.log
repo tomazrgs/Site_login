@@ -1,0 +1,81 @@
+werkzeug 25/10/2026 05:23:28 PM WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5001
+werkzeug 25/10/2026 05:23:28 PM Press CTRL+C to quit
+werkzeug 25/10/2026 05:23:28 PM  * Restarting with stat
+werkzeug 25/10/2026 05:23:29 PM  * Debugger is active!
+werkzeug 25/10/2026 05:23:29 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:23:59 PM 127.0.0.1 - - [25/Oct/2026 17:23:59] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:24:00 PM 127.0.0.1 - - [25/Oct/2026 17:24:00] "GET /static/style.css HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:24:00 PM 127.0.0.1 - - [25/Oct/2026 17:24:00] "GET /favicon.ico HTTP/1.1" 404 -
+werkzeug 25/10/2026 05:26:02 PM  * Detected change in 'C:\\Users\\Tomaz\\Documents\\Meus_projetos\\Site_login\\tela_login\\back\\teste.py', reloading
+werkzeug 25/10/2026 05:26:02 PM  * Restarting with stat
+werkzeug 25/10/2026 05:26:03 PM  * Debugger is active!
+werkzeug 25/10/2026 05:26:03 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:26:56 PM WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5001
+werkzeug 25/10/2026 05:26:56 PM Press CTRL+C to quit
+werkzeug 25/10/2026 05:26:56 PM  * Restarting with stat
+werkzeug 25/10/2026 05:26:56 PM  * Debugger is active!
+werkzeug 25/10/2026 05:26:56 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:27:00 PM 127.0.0.1 - - [25/Oct/2026 17:27:00] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:27:00 PM 127.0.0.1 - - [25/Oct/2026 17:27:00] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:27:13 PM 127.0.0.1 - - [25/Oct/2026 17:27:13] "POST / HTTP/1.1" 405 -
+werkzeug 25/10/2026 05:28:25 PM 127.0.0.1 - - [25/Oct/2026 17:28:25] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:28:25 PM 127.0.0.1 - - [25/Oct/2026 17:28:25] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:28:26 PM 127.0.0.1 - - [25/Oct/2026 17:28:26] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:28:26 PM 127.0.0.1 - - [25/Oct/2026 17:28:26] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:28:27 PM 127.0.0.1 - - [25/Oct/2026 17:28:27] "POST /login HTTP/1.1" 405 -
+werkzeug 25/10/2026 05:28:36 PM  * Detected change in 'C:\\Users\\Tomaz\\Documents\\Meus_projetos\\Site_login\\tela_login\\back\\teste.py', reloading
+werkzeug 25/10/2026 05:28:36 PM  * Restarting with stat
+werkzeug 25/10/2026 05:28:36 PM  * Debugger is active!
+werkzeug 25/10/2026 05:28:36 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:28:51 PM  * Detected change in 'C:\\Users\\Tomaz\\Documents\\Meus_projetos\\Site_login\\tela_login\\back\\teste.py', reloading
+werkzeug 25/10/2026 05:28:52 PM  * Restarting with stat
+werkzeug 25/10/2026 05:28:52 PM  * Debugger is active!
+werkzeug 25/10/2026 05:28:52 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:28:53 PM 127.0.0.1 - - [25/Oct/2026 17:28:53] "POST /login HTTP/1.1" 405 -
+werkzeug 25/10/2026 05:28:55 PM 127.0.0.1 - - [25/Oct/2026 17:28:55] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:28:55 PM 127.0.0.1 - - [25/Oct/2026 17:28:55] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:28:56 PM 127.0.0.1 - - [25/Oct/2026 17:28:56] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:28:56 PM 127.0.0.1 - - [25/Oct/2026 17:28:56] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:28:56 PM 127.0.0.1 - - [25/Oct/2026 17:28:56] "POST /login HTTP/1.1" 405 -
+werkzeug 25/10/2026 05:29:02 PM  * Detected change in 'C:\\Users\\Tomaz\\Documents\\Meus_projetos\\Site_login\\tela_login\\back\\teste.py', reloading
+werkzeug 25/10/2026 05:29:02 PM  * Restarting with stat
+werkzeug 25/10/2026 05:29:02 PM  * Debugger is active!
+werkzeug 25/10/2026 05:29:02 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:29:42 PM  * Detected change in 'C:\\Users\\Tomaz\\Documents\\Meus_projetos\\Site_login\\tela_login\\back\\teste.py', reloading
+werkzeug 25/10/2026 05:29:43 PM  * Restarting with stat
+werkzeug 25/10/2026 05:29:43 PM  * Debugger is active!
+werkzeug 25/10/2026 05:29:43 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:29:46 PM 127.0.0.1 - - [25/Oct/2026 17:29:46] "POST /login HTTP/1.1" 405 -
+werkzeug 25/10/2026 05:29:48 PM 127.0.0.1 - - [25/Oct/2026 17:29:48] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:29:48 PM 127.0.0.1 - - [25/Oct/2026 17:29:48] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:29:54 PM 127.0.0.1 - - [25/Oct/2026 17:29:54] "POST /login HTTP/1.1" 405 -
+werkzeug 25/10/2026 05:30:11 PM 127.0.0.1 - - [25/Oct/2026 17:30:11] "POST /login HTTP/1.1" 405 -
+werkzeug 25/10/2026 05:30:15 PM 127.0.0.1 - - [25/Oct/2026 17:30:15] "POST /login HTTP/1.1" 405 -
+werkzeug 25/10/2026 05:30:39 PM WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5001
+werkzeug 25/10/2026 05:30:39 PM Press CTRL+C to quit
+werkzeug 25/10/2026 05:30:39 PM  * Restarting with stat
+werkzeug 25/10/2026 05:30:39 PM  * Debugger is active!
+werkzeug 25/10/2026 05:30:39 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:30:43 PM 127.0.0.1 - - [25/Oct/2026 17:30:43] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:30:43 PM 127.0.0.1 - - [25/Oct/2026 17:30:43] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:33:08 PM 127.0.0.1 - - [25/Oct/2026 17:33:08] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:33:08 PM 127.0.0.1 - - [25/Oct/2026 17:33:08] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:33:13 PM  * Detected change in 'C:\\Users\\Tomaz\\Documents\\Meus_projetos\\Site_login\\tela_login\\back\\teste.py', reloading
+werkzeug 25/10/2026 05:33:13 PM  * Restarting with stat
+werkzeug 25/10/2026 05:33:14 PM  * Debugger is active!
+werkzeug 25/10/2026 05:33:14 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:33:15 PM 127.0.0.1 - - [25/Oct/2026 17:33:15] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:33:15 PM 127.0.0.1 - - [25/Oct/2026 17:33:15] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:33:16 PM 127.0.0.1 - - [25/Oct/2026 17:33:16] "GET /login?user=&password= HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:33:33 PM 127.0.0.1 - - [25/Oct/2026 17:33:33] "GET /login?user=&password= HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:36:59 PM  * Detected change in 'C:\\Users\\Tomaz\\Documents\\Meus_projetos\\Site_login\\tela_login\\back\\teste.py', reloading
+werkzeug 25/10/2026 05:36:59 PM  * Restarting with stat
+werkzeug 25/10/2026 05:37:00 PM  * Debugger is active!
+werkzeug 25/10/2026 05:37:00 PM  * Debugger PIN: 131-619-865
+werkzeug 25/10/2026 05:37:03 PM 127.0.0.1 - - [25/Oct/2026 17:37:03] "GET / HTTP/1.1" 200 -
+werkzeug 25/10/2026 05:37:03 PM 127.0.0.1 - - [25/Oct/2026 17:37:03] "GET /static/style.css HTTP/1.1" 304 -
+werkzeug 25/10/2026 05:37:08 PM 127.0.0.1 - - [25/Oct/2026 17:37:08] "POST /login HTTP/1.1" 405 -
+werkzeug 25/10/2026 05:37:38 PM 127.0.0.1 - - [25/Oct/2026 17:37:38] "POST /login HTTP/1.1" 405 -

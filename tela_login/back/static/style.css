@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #161512;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #fffffe;
+    padding: 30px;
+    border-radius: 8px;
+    width: 300px;
+}
+
+input, button {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0 14px;
+    box-sizing: border-box;
+}
+
+button {
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
