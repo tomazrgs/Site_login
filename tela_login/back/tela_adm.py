@@ -1,24 +1,24 @@
 import time
 import json
 
-# from manipula.usuario import Usuario
-from tela_login.manipula.usuario import Contas
-from tela_login.manipula.usuario import Usuario
 
-from tela_login.back.log_config import get_logger
+from manipula.usuario import Contas
+from manipula.usuario import Usuario
 
-from tela_login.back.interface import menu_admin
-from tela_login.back.interface import erro_arquivo
+from back.log_config import get_logger
 
-from tela_login.back.utils import limpar_tela
-from tela_login.back.utils import listar_usuarios
-from tela_login.back.utils import fechar
-from tela_login.back.utils import copiar_json
-from tela_login.back.utils import leitura_json
-from tela_login.back.utils import procura_caminho
-from tela_login.back.utils import remove_espaco
-from tela_login.back.utils import procura_caminho
-from tela_login.back.utils import trocar_senha_adm
+from back.interface import menu_admin
+from back.interface import erro_arquivo
+
+from back.utils import limpar_tela
+from back.utils import listar_usuarios
+from back.utils import fechar
+from back.utils import copiar_json
+from back.utils import leitura_json
+from back.utils import procura_caminho
+from back.utils import remove_espaco
+from back.utils import procura_caminho
+from back.utils import criptografa
 
 logger = get_logger(__name__)
 contas = Contas()
@@ -63,42 +63,23 @@ def promocao_adm(adm): #verificar função, mexendo diretamente com json, tentar
     except:
         PermissionError
 
-# def cad_adm(user):
-#     caminho = procura_caminho('dados.json')
-#     novo_adm = speed_cast('dados.json', True)
-#     dados = leitura_json('dados.json')
-#     logger.info(f'{user} realizou o cadastro de {novo_adm}')
+# def novo_admin(adm):
 
+#     limpar_tela()
 #     try:
-#         with open(caminho,'w', encoding='utf-8') as arquivo:
-#             json.dump(dados,arquivo, indent=4)
+#         print('1: Usuario existente\n'
+#             '2: Usuario não existente\n')
+#         escolha = int(input('Escolha uma opção: '))
+
+#         match escolha:
+#             case 1:
+#                 promocao_adm(adm)
+#             case 2:
+#                 cad_adm(user)
+
 #     except:
-#         erro_arquivo()
-#         logger.error('Arquivo impossibilitado de abrir ou ser achado.')
-#         opcoes_adm()
-
-#     print(f'{novo_adm} cadastrado como adm')
-#     opcoes_adm(user)
-
-
-def novo_admin(adm):
-
-    limpar_tela()
-    try:
-        print('1: Usuario existente\n'
-            '2: Usuario não existente\n')
-        escolha = int(input('Escolha uma opção: '))
-
-        match escolha:
-            case 1:
-                promocao_adm(adm)
-            case 2:
-                #cad_adm(user)
-                pass
-
-    except:
-        ValueError
-        logger.info(f'o adm {adm} selecionou um numero invalido ou adicionou letras, na seção de criação de novo adm.')
+#         ValueError
+#         logger.info(f'o adm {adm} selecionou um numero invalido ou adicionou letras, na seção de criação de novo adm.')
 
 def deletar_usuario(adm):
     carrega = ''
@@ -109,26 +90,30 @@ def deletar_usuario(adm):
         caminho = procura_caminho('dados.json')
     except:
         FileNotFoundError
-        logger.warning(f'Arquivo não consegue ser encontrado pra ser lido')
-    try:
-        usuario = input('Informe o usuario que deseja deletar: ')
+        logger.warning(f'Arquivo não consegue ser encontrado')
+        print('Arquivo não encontrado')
+        time.sleep(0.5)
+        opcoes_adm()
+
+    usuario = input('Informe o usuario que deseja deletar: ')
+    
+    while len(carrega) < 10:
+        limpar_tela()
+        i += 10
+        carrega += '|'
+        percent = f'- {i}%'
+        print(carrega,percent)
+        time.sleep(0.5)
         
-        while len(carrega) < 10:
-            limpar_tela()
-            i += 10
-            carrega += '|'
-            percent = f'- {i}%'
-            print(carrega,percent)
-            time.sleep(0.5)
-            
-        print('1 - sim \n' 
-            '2- não')
-        escolha = input(f'Deseja deletar  {usuario}?')
-        
-        if escolha == 1:
-            for indice, dado in enumerate(dados):
-                if usuario == dado['login']:
-                    dados.pop(indice)
+    print('1 - sim \n' 
+        '2- não')
+    escolha = input(f'Deseja deletar  {usuario}?')
+    
+    if escolha == 1:
+        for indice, dado in enumerate(dados):
+            if usuario == dado['login']:
+                dados.pop(indice)
+                
         try:
             with open(caminho, 'w', encoding='utf') as folder:
                 json.dump(dados,folder, indent=4)
@@ -138,9 +123,37 @@ def deletar_usuario(adm):
             logger.info(f'O ADM {adm} tentou deletar a conta de {usuario}')
 
         logger.info(f'O ADM {adm} deletou a conta de {usuario}')
+
+def trocar_senha_adm(adm): # Verificar sobre algumas verificações e loops
+    senha_trocada = False
+
+    try:
+        copiar_json('dados.json', 'backup.json')
+        dados = leitura_json('dados.json')
+        endereco = procura_caminho('dados.json')
     except:
-        ValueError
-        logger.warning(f'Erro ocorrido ao deletar usuario.')
+        FileNotFoundError
+        logger.info('Arquivo não encontrado')
+
+    usuario = input('informe o nome de usuario: ')
+
+    for dado in dados:
+        if usuario == dado['login']:
+            nova_senha = input('Digite a nova senha: ')
+            nova_senha = remove_espaco(nova_senha)
+            senha_criptografada = criptografa(nova_senha)
+            dado['senha'] = senha_criptografada
+            senha_trocada = True
+
+    if  senha_trocada:
+        with open(endereco, 'w', encoding= 'utf-8') as arquivo:
+            json.dump(dados, arquivo, indent=4)
+        logger.info(f'{adm} trocou a senha de {usuario}.')
+        print('senha alterada com sucesso')
+    else: print('Insira um usuario existente')
+
+    return 0
+
 
 def opcoes_adm(adm):
     #/ lieralmente switch case do C
@@ -151,7 +164,7 @@ def opcoes_adm(adm):
         escolha = int(input('\nEscolha uma opção '))
         match escolha:
             case 1: # Chama a função entrar
-                novo_admin(adm)
+                promocao_adm(adm)
             case 2:
                 trocar_senha_adm(adm)
             case 3:
