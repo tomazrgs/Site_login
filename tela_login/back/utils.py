@@ -5,15 +5,30 @@ import time
 import random
 import uuid
 import string
-from email_validator import validate_email, EmailNotValidError
+import resend
 
-from tela_login.back.log_config import get_logger
+from dotenv import load_dotenv
+from back.log_config import get_logger
+
+from manipula.usuario import Usuario
+
 
 logger = get_logger(__name__)
+load_dotenv()
 
+resend.api_key = os.getenv('api_key')
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
+
+def get_ip():
+    import socket
+
+    hostname = socket.gethostname()
+    ip_local = socket.gethostbyname(hostname)
+
+    return(ip_local)
 
 def codig_seguranca():
     codigo = ''
@@ -33,21 +48,24 @@ def verifica_vazio(string, validacao):
         string = remove_espaco(string)
     return string
 
-def verifica_email(email):
-    tentativas = 0
+def email_senha():
 
-    while tentativas <= 3:
-        try:
-            valid = validate_email(email)
-            return True, valid.email 
-        except: EmailNotValidError
+    codigo = codig_seguranca
+
+    resend.Emails.send({
+        "from": "onboarding@resend.dev",
+        "to": "tomazgoncalvessantos@gmail.com",
+        "subject": "<strong>Recuperação de senha</strong>",
+        "html": f"<p><strong>Seu código de recuperação de senha {codigo} </strong></p>"
+        })
+
+    return codigo
+
+def valida(informado, correto):
+    if informado == correto:
+        return True
     return False
-
-def valida(correto, informado):
-     if correto == informado:
-          return True
-     else: return False
-
+    
 def remove_espaco(string):
     string_correta = string.replace(' ','')
     return string_correta
@@ -71,7 +89,7 @@ def copiar_json(nome_arquivo, nome_backup):
         dados = leitura_json(caminho)
         with open(caminho_backup, 'w', encoding = 'utf-8') as backup:
                 json.dump(dados, backup, indent=4)
-
+                    
 def criptografa(senha):
 
     #/ Chamada quando necessario fazer hash.
