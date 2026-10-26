@@ -3,42 +3,47 @@ import json
 import resend
 import os
 
+from flask import Flask, request, render_template
+
 from dotenv import load_dotenv
-from email_validator import validate_email, EmailNotValidError
 
-from tela_login.manipula.usuario import Usuario
-from tela_login.manipula.usuario import Contas
+from manipula.usuario import Usuario
+from manipula.usuario import Contas
 
+from back.log_config import get_logger
 
-from tela_login.back.log_config import get_logger
+from back.tela_adm import opcoes_adm
 
-from tela_login.back.tela_adm import opcoes_adm
+from back.interface import menu
+from back.interface import erro_login_cad
+from back.interface import erro_arquivo
+from back.interface import stile
 
-from tela_login.back.interface import menu
-from tela_login.back.interface import erro_login_cad
-from tela_login.back.interface import erro_arquivo
-from tela_login.back.interface import stile
-
-from tela_login.back.utils import codig_seguranca
-from tela_login.back.utils import gera_id
-from tela_login.back.utils import criptografa
-from tela_login.back.utils import limpar_tela
-from tela_login.back.utils import fechar
-from tela_login.back.utils import listar_usuarios
-from tela_login.back.utils import remove_espaco
-from tela_login.back.utils import leitura_json
-from tela_login.back.utils import copiar_json
-from tela_login.back.utils import procura_caminho
-from tela_login.back.utils import verifica_vazio
-from tela_login.back.utils import valida
-from tela_login.back.utils import verifica_email
+from back.utils import codig_seguranca
+from back.utils import gera_id
+from back.utils import criptografa
+from back.utils import limpar_tela
+from back.utils import fechar
+from back.utils import listar_usuarios
+from back.utils import remove_espaco
+from back.utils import leitura_json
+from back.utils import copiar_json
+from back.utils import procura_caminho
+from back.utils import verifica_vazio
+from back.utils import valida
+from back.utils import email_senha
+from back.utils import get_ip
 
 logger = get_logger(__name__)
+load_dotenv()
+
+app = Flask(__name__)
+
+resend.api_key = os.getenv('api_key')
 
 contas = Contas()
 
-tentativas = 0
-
+@app.route('/')
 def entrar():
     global contas
 
@@ -47,64 +52,63 @@ def entrar():
     logado = False
 
     while x < 3 and not logado:
-        # tenta abrir o arquivo leitura_json, caso falhe adiciona um erro ao log de tentativa de login e retorna ao menu.
+
         try:
             dados = leitura_json('dados.json')
-        except:
-            FileNotFoundError
-            logger.error('Arquivo não esta conseguindo ser leito.')
-            tentativas += 1
+        except FileNotFoundError as erro:
+            logger.error(f'{erro}')
             opcoes()
 
-        # puxa funcao que transforma obj d classe em dicionario para adicionar a lista em Contas para manipulacao e leitura correta.
         for dado in dados:
             dado = Usuario.from_dict(dado)
             contas.adduser(dado)
 
         usuario = input('Informe seu usuario: ').lower() 
         usuario = remove_espaco(usuario)
-        usuario = verifica_vazio(usuario, 'usuario')
+        usuario_tratado = verifica_vazio(usuario, 'usuario')
 
-        senha = remove_espaco(input(f'Olá {usuario} informe sua senha: '))
-        senha = verifica_vazio(senha, 'senha')
-        senha_criptografada = criptografa(senha)
+        senha = input(f'Olá {usuario_tratado} informe sua senha: ')
+        senha = remove_espaco(senha)
+        senha_tratada = verifica_vazio(senha, 'senha')
 
-        usuario_encontrado = contas.verifica_existencia(usuario)
+        senha_hash = criptografa(senha_tratada)
 
-        valida_adm = contas.informa_role(usuario)
+        usuario_encontrado = contas.verifica_existencia(usuario_tratado)
 
-        logado = contas.verifica_login(usuario,senha_criptografada)
-        time.sleep(3)
+        if usuario_encontrado:
+            logado = contas.verifica_login(usuario_tratado,senha_hash)
+        # else:
+        #     x += 1
+        #     logger.warning('tentativa de login, usuario nao encontrado')
+        #     erro_login_cad()
 
-        # otimizar esta verificazao, muito grande com mt if e else.
-        if not usuario_encontrado:
-            x += 1
-            logger.warning('tentativa de login, usuario nao encontrado')
-            erro_login_cad()
-        elif usuario_encontrado and valida_adm == 'adm':
-            logado = contas.verifica_login(usuario,senha_criptografada)
-            if  logado:
-                logger.warning(f'Adm {usuario} logado')
-                opcoes_adm(usuario)
+        valida_role = contas.informa_role(usuario_tratado)
+
+        if valida_role == 'adm' and logado:
+            logger.info(f'Adm {usuario_tratado} logado')
+            opcoes_adm(usuario_tratado)
+        elif logado:
+            print(f'Seja bem vindo {usuario_tratado}')
+            time.sleep(2)
+            logger.info(f'{usuario_tratado} logou com sucesso')
         else:
-            logado = contas.verifica_login(usuario,senha_criptografada)
-            if logado:
-                print(f'Seja bem vindo {usuario}')
-                time.sleep(1)
-                logger.warning(f'{usuario} logou com sucesso')
-            else:
-                x += 1
-                logger.warning(f'tentativa de login do usuario {usuario}, senha incorreta ')
-                erro_login_cad()
+            x += 1 
+            erro_login_cad()
 
 
     if x == 3:
         limpar_tela()
 
         stile('Limite de tentativas excedidas, tente novamente.')
+        logger.warn(f'Computador {get_ip()} excedeu o numero de tentativas')
+
         escolha = input('Caso tenha esquecido sua senha digite "SIM": ').lower()
 
+
+
         if escolha == 'sim':   
+
+            logger.warn(f'Computador {get_ip()} slicitou troca de senha')
 
             usuario = input('informe o usuario:')
 
@@ -112,44 +116,27 @@ def entrar():
 
             if usuario_encontrado:
 
-                codigo = codig_seguranca()
-
-                load_dotenv()
-
-                resend.api_key = os.getenv('resend_key')
-                resend.Emails.send({
-                    "from": "onboarding@resend.dev",
-                    "to": "tomazgoncalvessantos@gmail.com",
-                    "subject": "Recuperação de senha",
-                    "html": f"<p><strong>Seu código de recuperação de senha {codigo} </strong></p>"
-                })
-
-                time.sleep(2)
-
-                codigo_informado = input('Informe o codigo de seguranca que foi enviado a seu email: ')
-
-
-                if valida(codigo, codigo_informado):
-                    nova_senha = input('Informe sua nova senha:')
-
-                    
-                else: 
-                    print('codigo incorreto') 
-                    return opcoes()
+                codigo = email_senha()
                 
+                codigo_infomado = input('Informe o código de verificação enviado a seu email:')
+
+                codigo_infomado = valida(codigo_infomado,codigo)
+
+                if codigo_infomado:
+                    nova_senha = input ("informe uma nova senha: ")
+                    objeto = contas.coleta_objeto(usuario)
+                    objeto.troca_senha(objeto, nova_senha)
             else:
                 print('Usuario inesistente para solicitação de recuperação de senha')
                 time.sleep(1)
-                logger.info('Reset de senha falhou, usuario inexistente.')
                 opcoes()
 
-            logger.info(f'Reset de senha requisitado para usuario: {usuario}.')
+            logger.info(f'Reset de senha requisitado para {get_ip()}')
             time.sleep(1)
-            opcoes()
+            opcoes()    
 
 def cadastrar():
     global contas
-    global tentativas
 
     try:
         dados = leitura_json('dados.json')
@@ -163,20 +150,21 @@ def cadastrar():
     endereco = procura_caminho('dados.json')
 
     for dado in dados:
-        dado = Usuario.from_dict(dado)
-        contas.adduser(dado)
-
-    i = 0  
+        user = Usuario.from_dict(dado)
+        contas.adduser(user)
 
     limpar_tela()
 
     usuario = input('Escolha um nome de usuario: \n').lower()
-    usuario = remove_espaco(usuario)
+    usuario_tratado = verifica_vazio(remove_espaco(usuario), 'usuario')
 
-    existe = contas.verifica_existencia(usuario)
 
+    existe = contas.verifica_existencia(usuario_tratado)
+
+    i = 0
     while existe and i < 3:
         usuario = input('Nome de usuario invalido: ')
+        usuario_tratado = verifica_vazio(remove_espaco(usuario), 'usuario')
         i += 1
     if i == 3:
         print('Tentativas excedidas, por favor tente novamente do menu')
@@ -185,36 +173,28 @@ def cadastrar():
         opcoes()
 
     senha = input('Insira a senha: ') 
-    senha = verifica_vazio(senha,'senha')
+    senha_tratada = verifica_vazio(remove_espaco(senha),'senha')
 
     repet_senha = input('Digite a senha novamente: ')
-    repet_senha = verifica_vazio(repet_senha, 'senha')
+    repet_senha_tratada = verifica_vazio(remove_espaco(repet_senha), 'senha')
 
-
-    while repet_senha != senha and tentativas < 3:
-        tentativas += 1
+    y = 0
+    while repet_senha_tratada != senha_tratada and y < 3:   
         repet_senha = input('As senhas são diferentes, por favor digite a mesma senha: ')
-        repet_senha = verifica_vazio(senha, 'senha')
-    if tentativas == 3:
+        repet_senha_tratada = verifica_vazio(remove_espaco(repet_senha), 'senha')
+        y += 1
+
+    if y == 3:
         print('tentativas excedidas, por favor tente novamente')
         logger.warning('tentativas de cadastro excedidas.')
         time.sleep(2)
         opcoes()
 
-    senha_criptografada = criptografa(senha)
-
-    email = input('Informe seu email: ')
-
-    # verificar isso aqui depois lindao
-
-    email_validado = verifica_email(email)
-
-    if not email_validado:
-        opcoes()
+    senha_hash = criptografa(senha_tratada)
 
     identifica = gera_id()
 
-    novo_user = Usuario(identifica,usuario,senha_criptografada)
+    novo_user = Usuario(identifica,usuario_tratado,senha_hash)
 
     try:
         dados.append(novo_user.to_dict())
@@ -222,8 +202,8 @@ def cadastrar():
         with open(endereco, 'w', encoding='utf-8') as file:
             json.dump(dados, file, indent=4)
 
-        print(f'{usuario} seu cadastro foi feito com sucesso!! ')
-        logger.info(f'Novo usuario {usuario} cadastrado.')
+        print(f'{usuario_tratado} seu cadastro foi feito com sucesso!! ')
+        logger.info(f'Novo usuario {usuario_tratado} cadastrado.')
     except:
         ProcessLookupError
 
@@ -232,10 +212,6 @@ def cadastrar():
 
 def opcoes(): 
     menu()
-    global tentativas
-
-    tentativas = 0
-
     #/ lieralmente switch case do C
     try:
         escolha = int(input('\nEscolha uma opção: '))
@@ -252,7 +228,6 @@ def opcoes():
         ValueError
         time.sleep(1)
         logger.error('Erro ao escolher opção.')
-
-        
+       
 if __name__ == '__main__':
     opcoes()
