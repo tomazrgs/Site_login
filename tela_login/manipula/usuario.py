@@ -6,6 +6,7 @@ class Usuario:
         self._email = email
         self._role = role
 
+
     def __repr__(self):
         return f'userID: {self.userID}, Usuario: {self.login}, Senha: {self._senha}, Role: {self._role}'
     
@@ -15,7 +16,7 @@ class Usuario:
             "login": self.login,
             "senha": self._senha,
             "email": self._email,
-            "role": self._role
+            "role":self._role
         }
     
     @classmethod
@@ -44,8 +45,6 @@ class Usuario:
     # def ativar(self):
     #     return 'Status da conta: ☑' if self._role else 'Status da conta: ☐'
     
-
-
 class Contas():
     def __init__(self):
         self.lista = []

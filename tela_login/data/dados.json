@@ -1,44 +1,16 @@
 [
     {
-        "login": "Flavia",
-        "senha": "ff2ccb6ba423d356bd549ed4bfb76e96976a0dcde05a09996a1cdb9f83422ec4",
-        "adm": false,
-        "pergunta": "Primeira animal",
-        "resposta": "freed"
-    },
-    {
-        "login": "flavia",
-        "senha": "1d28c120568c10e19b9d8abe8b66d0983fa3d2e11ee7751aca50f83c6f4a43aa",
-        "adm": false,
-        "pergunta": "Nome do primeiro animal",
-        "resposta": "freed"
-    },
-    {
+        "userID": "a37ae492-d320-4a34-8dd1-045d3f50344e",
         "login": "tomaz",
-        "senha": "1d28c120568c10e19b9d8abe8b66d0983fa3d2e11ee7751aca50f83c6f4a43aa",
-        "adm": false,
-        "pergunta": "Animal de estimacao",
-        "resposta": "8cfde6efdfc4ed5ab1f6acbbd1ba49bf31932f84d0a4c090eb41c7d151e8b180"
-    },
-    {
-        "login": "adm",
-        "senha": "fcef631eab0be0f69d940e737b136e0cbcf4f6f1de81f50822862002655af92e",
-        "adm": true,
-        "pergunta": "nome do gato laranja",
-        "resposta": "8cfde6efdfc4ed5ab1f6acbbd1ba49bf31932f84d0a4c090eb41c7d151e8b180"
-    },
-    {
-        "login": "123",
         "senha": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-        "adm": false,
-        "pergunta": "123",
-        "resposta": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+        "email": "tomazrobertogonsalves@gmail.com" ,
+        "role": "user"
     },
     {
-        "login": "xablau",
-        "senha": "32033527c7c377fe742d628bdcd64ca6da2e5ca6d327c97fcd35d8b2785f8f1c",
-        "adm": false,
-        "pergunta": "nome do cachorro",
-        "resposta": "cccf52f3d03c5072ee64a136f74fc56b27e04f15ffe5d1d277d58ab18d94b327"
+        "userID": "34e6f448-e1d0-4e25-aaa2-74a8c69c1e61",
+        "login": "flavio",
+        "senha": "b3a8e0e1f9ab1bfe3a36f231f676f78bb30a519d2b21e6c530c0eee8ebb4a5d0",
+        "email": "flavia@gmail.com",
+        "role": "user"
     }
 ]
